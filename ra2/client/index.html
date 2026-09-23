@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rusted Arena — 1v1 Gun Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="levels"><span id="lv1">P1 1/8</span><span class="sep">|</span><span id="lv2">P2 1/8</span></div>
+  <div id="killfeed"></div>
+  <div id="scope" class="hidden"></div>
+  <div id="xhair"><i></i><i></i><i></i><i></i></div>
+  <div id="hitmark"><i></i><i></i><i></i><i></i></div>
+  <div id="dmgnums"></div>
+  <div id="banner"></div>
+  <div id="sub"></div>
+  <div id="wpn"><div id="wname">SIDEARM</div><div id="ammo"><b id="mag">12</b> <span id="res">/ 60</span></div><div id="reload" class="hidden">RELOADING</div></div>
+  <div id="hpwrap"><div id="hpbar"><div id="hpfill"></div></div><div id="hpnum">100</div></div>
+  <div id="lowhp"></div>
+  <div id="vignette"></div>
+  <div id="deathscreen" class="hidden"><h2>KILLED</h2><p>Respawning…</p></div>
+  <div id="hint" class="hidden">Click to lock the mouse</div>
+</div>
+<div id="countdown" class="hidden"></div>
+
+<div id="menu">
+  <div class="panel" id="scr-main">
+    <h1>RUSTED ARENA</h1><h2>1v1 gun game · v2</h2>
+    <button data-go="host">Host game</button>
+    <button data-go="join">Join game</button>
+    <button data-go="solo">Practice (solo, target dummy)</button>
+    <button data-go="settings" class="ghost">Settings &amp; server</button>
+    <button data-go="controls" class="ghost">Controls</button>
+  </div>
+  <div class="panel hidden" id="scr-host">
+    <h2>Host game — you are Player 1</h2>
+    <div class="code" id="roomCode">····</div>
+    <button id="copyCode">Copy code</button>
+    <div class="status" id="hostStatus"></div>
+    <p class="small">Player 2 opens the same address, clicks Join game and types this code.</p>
+    <button class="ghost" data-go="main">Back</button>
+  </div>
+  <div class="panel hidden" id="scr-join">
+    <h2>Join game — you are Player 2</h2>
+    <input type="text" id="joinCode" maxlength="4" placeholder="ROOM CODE" autocomplete="off" spellcheck="false">
+    <button id="joinGo">Join</button>
+    <div class="status" id="joinStatus"></div>
+    <button class="ghost" data-go="main">Back</button>
+  </div>
+  <div class="panel hidden" id="scr-settings">
+    <h2>Settings</h2>
+    <label>Server address <span class="small">(leave empty when the game is opened from the server itself)</span>
+      <input type="text" class="url" id="setServer" placeholder="wss://your-app.onrender.com"></label>
+    <div class="status" id="serverHint"></div>
+    <label>Mouse sensitivity <span id="sensVal">1.00</span><input type="range" id="setSens" min="0.3" max="3" step="0.05"></label>
+    <label>Field of view <span id="fovVal">82</span><input type="range" id="setFov" min="65" max="105" step="1"></label>
+    <label class="row"><input type="checkbox" id="setDmg"> Show damage numbers</label>
+    <button id="saveSettings">Save</button>
+    <button class="ghost" data-go="main">Back</button>
+  </div>
+  <div class="panel hidden" id="scr-controls">
+    <h2>Controls</h2>
+    <div class="keys">
+      <b>W A S D</b><span>Move</span><b>Mouse</b><span>Look (click the game to lock the cursor)</span>
+      <b>Left mouse</b><span>Fire</span><b>Right mouse</b><span>Aim down sights</span>
+      <b>R</b><span>Reload</span><b>Space</b><span>Jump</span><b>Shift</b><span>Sprint (short delay before you can fire)</span>
+      <b>Ctrl / C</b><span>Crouch (tighter spread)</span><b>W / S on a ladder</b><span>Climb / descend</span><b>Esc</b><span>Menu</span>
+    </div>
+    <p class="small">Gun game: every kill advances your weapon. Sidearm → Pump Shotgun → Compact SMG → Assault Rifle → Tactical Rifle → Precision Rifle → Marksman Rifle → Combat Knife. First to a knife kill wins. Headshots, torso, arms and legs deal different damage.</p>
+    <button class="ghost" data-go="main">Back</button>
+  </div>
+  <div class="panel hidden" id="scr-lobby"><h2 id="lobbyTitle">Waiting…</h2><div class="status" id="lobbyStatus"></div><button class="ghost" id="lobbyBack">Main menu</button></div>
+  <div class="panel hidden" id="scr-pause"><h2>Paused (the match keeps running)</h2><button id="resume">Resume</button><button id="pauseMenu" class="ghost">Leave to main menu</button></div>
+  <div class="panel hidden" id="scr-over"><h1 id="winner">PLAYER 1 WINS</h1><div class="status" id="overStatus"></div><button id="rematch">Rematch</button><button id="overMenu" class="ghost">Main menu</button></div>
+</div>
+
+<script src="lib/three.min.js"></script>
+<script src="lib/GLTFLoader.js"></script>
+<script src="lib/SkeletonUtils.js"></script>
+<script src="js/config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/weapons.js"></script>
+<script src="js/render.js"></script>
+<script src="js/map.js"></script>
+<script src="js/player.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/remote.js"></script>
+<script src="js/net.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
